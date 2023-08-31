@@ -1,4 +1,4 @@
-import { View, Keyboard, ScrollView, KeyboardAvoidingView, Dimensions, Text } from "react-native";
+import { View, Keyboard, ScrollView, TouchableWithoutFeedback, KeyboardAvoidingView, Dimensions, Text } from "react-native";
 import * as yup from 'yup';
 import PostsScreen from "../PostsScreen/PostsScreen";
 import Input from "../InputComponent/InputComponent";
@@ -63,7 +63,8 @@ const RegistrationScreen = () => {
                     flexGrow: 1,
                     justifyContent: 'center',
                 }}
-            >
+            >   
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <LoginWrapper
                     // isKeyboardOpen={isKeyboardOpen}
                 >
@@ -117,6 +118,7 @@ const RegistrationScreen = () => {
                         </TouchableOpacity>
                         </LinkWrapper>
                 </LoginWrapper>
+                </TouchableWithoutFeedback>
         </ScrollView>
         </PostsScreen>
     )
