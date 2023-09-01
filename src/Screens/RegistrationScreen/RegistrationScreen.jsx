@@ -1,8 +1,8 @@
 import { View, Keyboard, ScrollView, TouchableWithoutFeedback, KeyboardAvoidingView, Dimensions, Text } from "react-native";
 import * as yup from 'yup';
-import PostsScreen from "../PostsScreen/PostsScreen";
-import Input from "../InputComponent/InputComponent";
-import Button from "../ButtonComponent/Button";
+import BGImg from "../../components/BGScreensComponent/BGImg";
+import Input from "../../components/InputComponent/InputComponent";
+import Button from "../../components/ButtonsComponents/Button";
 import { ImgWrapper, LoginWrapper, PlusIconWrapper, KeyboardStyled, TitleReg, LinkWrapper, Paragraph, ShowPasswordReg, NavigationLog_Reg } from '../LoginScreen/StyledLoginScreen';
 import { useState, useEffect } from "react";
 import { TouchableOpacity } from "react-native";
@@ -46,6 +46,10 @@ const RegistrationScreen = () => {
                     email: '',
                     password: '',
                 });
+                navigation.replace('Home', {
+                    screen: 'Публікації',
+                    params: {email: formData.email, login: formData.login},
+                });
             })
             .catch((errors) => {
                 const newErrors = {};
@@ -57,7 +61,7 @@ const RegistrationScreen = () => {
     };
 
     return (
-        <PostsScreen>
+        <BGImg>
         <ScrollView
                 contentContainerStyle={{
                     flexGrow: 1,
@@ -120,7 +124,7 @@ const RegistrationScreen = () => {
                 </LoginWrapper>
                 </TouchableWithoutFeedback>
         </ScrollView>
-        </PostsScreen>
+        </BGImg>
     )
 }
 

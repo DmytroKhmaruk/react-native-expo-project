@@ -1,7 +1,7 @@
 import { View, Keyboard, ScrollView, TouchableWithoutFeedback ,KeyboardAvoidingView, Dimensions, Text } from "react-native";
-import PostsScreen from "../PostsScreen/PostsScreen";
-import Input from "../InputComponent/InputComponent";
-import Button from "../ButtonComponent/Button";
+import BGImg from "../../components/BGScreensComponent/BGImg";
+import Input from "../../components/InputComponent/InputComponent";
+import Button from "../../components/ButtonsComponents/Button";
 import * as yup from 'yup';
 import { LoginWrapper, KeyboardStyled, Title, Paragraph, LinkWrapper, NavigationLog_Reg, ShowPasswordLog } from './StyledLoginScreen';
 import { useState, useEffect } from "react";
@@ -42,6 +42,10 @@ const LoginScreen = () => {
                     email: '',
                     password: '',
                 });
+                navigation.replace('Home', {
+                    screen: 'Публікації',
+                    params: {email: formData.email},
+                });
             })
             .catch((errors) => {
                 const newErrors = {};
@@ -75,7 +79,7 @@ const LoginScreen = () => {
     // }, []);
 
     return (
-        <PostsScreen>
+        <BGImg>
             {/* <KeyboardAvoidingView
             > */}
             <ScrollView
@@ -126,7 +130,7 @@ const LoginScreen = () => {
                     </TouchableWithoutFeedback>
                 </ScrollView>
                 {/* </KeyboardAvoidingView> */}
-        </PostsScreen>
+        </BGImg>
     )
 }
 
