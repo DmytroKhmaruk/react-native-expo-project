@@ -1,7 +1,7 @@
 
 import { ButtonWrapper, ButtonText } from './StyledButton'
 
-const Button = ({ title, onPress }) => {
+const SubmitButton = ({ title, onPress }) => {
 
     return (
         <ButtonWrapper onPress={onPress}>
@@ -10,4 +10,4 @@ const Button = ({ title, onPress }) => {
     );
 };
 
-export default Button;
+export default SubmitButton;

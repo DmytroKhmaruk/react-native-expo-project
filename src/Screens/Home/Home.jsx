@@ -1,25 +1,16 @@
-import { View, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import PostsScreen from '../PostsScreen/PostsScreen';
 import CreatePostsScreen from "../CreatePostsScreen/CreatePostsScreen";
 import ProfileScreen from "../ProfileScreen/ProfileScreen";
 import { MaterialIcons } from "@expo/vector-icons";
+import BottomActiveIcons from "../../components/BottomActiveIconsContainer/BottomActiveIcons";
 import LogoutBtn from "../../components/ButtonsComponents/LogoutBtn";
 import GoBackBtn from "../../components/ButtonsComponents/GoBackBtn";
+import CommentsScreen from "../CommentsScreen/CommentsScreen";
 
 const Tab = createBottomTabNavigator();
 
 const Home = () => {
-    const styles = StyleSheet.create({
-  addWrapper: {
-    width: 70,
-    height: 40,
-    borderRadius: 20,
-            backgroundColor: "#FF6C00",
-            justifyContent: 'center',
-            alignItems: 'center',
-  },
-});
     return (
         <Tab.Navigator
             initialRouteName="Posts"
@@ -30,22 +21,30 @@ const Home = () => {
                     borderTopWidth: 1,
                 },
 
-                tabBarIcon: ({ focused, color, size }) => {
-                    let iconName;
+                tabBarIcon: ({ focused }) => {
 
                     if (route.name === 'Posts') {
-                        iconName = 'grid-view';
+                        return (
+                            <BottomActiveIcons focused={focused}>
+                                <MaterialIcons name='grid-view' size={24}
+                                    color={focused ? color = '#ffffff' : color = 'rgba(33, 33, 33, 0.8)'} />
+                            </BottomActiveIcons>
+                        );
+
                     } else if (route.name === 'CreatePosts') {
                         return (
-                            <View style={styles.addWrapper}>
-                                <MaterialIcons name='add' size={size} color='#ffffff' />
-                            </View>
+                                <MaterialIcons name='add' size={24} color='rgba(33, 33, 33, 0.8)' /> 
                         );
+                        
                     } else if (route.name === 'Profile') {
-                        iconName = 'person-outline';
+                        return (
+                            <BottomActiveIcons focused={focused}>
+                                <MaterialIcons name='person-outline' size={24}
+                                    color={focused ? color = '#ffffff' : color = 'rgba(33, 33, 33, 0.8)'} />
+                            </BottomActiveIcons>
+                        );
                     }
 
-                    return <MaterialIcons name={iconName} size={size} />
                 },
 
                 headerStyle: {
@@ -62,7 +61,7 @@ const Home = () => {
                 component={PostsScreen}
                 options={{
                     title: 'Публікації',
-                    headerRight: () => <LogoutBtn />,
+                    headerRight: () => <LogoutBtn style={{ top: 16 }} />,
                 }}
             />
             <Tab.Screen
@@ -77,8 +76,14 @@ const Home = () => {
             <Tab.Screen
                 name='Profile'
                 component={ProfileScreen}
+                options={{ headerShown: false }}
+            />
+            <Tab.Screen
+                name='Comments'
+                component={CommentsScreen}
                 options={{
                     title: 'Коментарі',
+                    tabBarItemStyle: {display: 'none'},
                     tabBarStyle: { display: 'none' },
                     headerLeft: () => <GoBackBtn />,
                 }}

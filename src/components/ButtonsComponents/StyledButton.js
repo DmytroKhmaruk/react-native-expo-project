@@ -18,3 +18,10 @@ export const ButtonText = styled.Text`
     font-weight: 400;
     text-align: center;
 `;
+
+export const PressableBG = styled.Pressable`
+    background-color: #FF6C00;
+    padding: 10px;
+    border-radius: 50%;
+    align-items: center;
+`;
