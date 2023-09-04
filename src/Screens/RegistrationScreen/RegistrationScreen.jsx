@@ -1,13 +1,13 @@
 import { View, Keyboard, ScrollView, TouchableWithoutFeedback, KeyboardAvoidingView, Dimensions, Text } from "react-native";
 import * as yup from 'yup';
-import PostsScreen from "../PostsScreen/PostsScreen";
-import Input from "../InputComponent/InputComponent";
-import Button from "../ButtonComponent/Button";
-import { ImgWrapper, LoginWrapper, PlusIconWrapper, KeyboardStyled, TitleReg, LinkWrapper, Paragraph, ShowPasswordReg, NavigationLog_Reg } from '../LoginScreen/StyledLoginScreen';
+import BGImg from "../../components/BGScreensComponent/BGImg";
+import Input from "../../components/InputComponent/InputComponent";
+import SubmitButton from "../../components/ButtonsComponents/SubmitButton";
+import { LoginWrapper, KeyboardStyled, TitleReg, LinkWrapper, Paragraph, ShowPasswordReg, NavigationLog_Reg } from '../LoginScreen/StyledLoginScreen';
 import { useState, useEffect } from "react";
 import { TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { MaterialIcons } from "@expo/vector-icons";
+import UserAvatar from "../../components/UserAvatar/UserAvatar";
 
 const validationSchema = yup.object().shape({
     login: yup.string().required('Ведіть логін'),
@@ -17,7 +17,7 @@ const validationSchema = yup.object().shape({
 
 const RegistrationScreen = () => {
     const [passwordShow, setPasswordShow] = useState(false);
-    // const [userPhoto, setUserPhoto] = useState(null);
+    const [image, setImage] = useState(null);
     const [formData, setFormData] = useState({
         login: '',
         email: '',
@@ -46,6 +46,12 @@ const RegistrationScreen = () => {
                     email: '',
                     password: '',
                 });
+                navigation.replace('Home', {
+                    screen: 'Публікації',
+                    params: {
+                        email: formData.email, login: formData.login, uri: image
+                    },
+                });
             })
             .catch((errors) => {
                 const newErrors = {};
@@ -57,7 +63,7 @@ const RegistrationScreen = () => {
     };
 
     return (
-        <PostsScreen>
+        <BGImg>
         <ScrollView
                 contentContainerStyle={{
                     flexGrow: 1,
@@ -68,11 +74,7 @@ const RegistrationScreen = () => {
                 <LoginWrapper
                     // isKeyboardOpen={isKeyboardOpen}
                 >
-                    <ImgWrapper>
-                        <PlusIconWrapper>
-                            <MaterialIcons name="control-point" size={25} color='#FF6C00' />
-                        </PlusIconWrapper>
-                    </ImgWrapper>
+                    <UserAvatar setImage={setImage} image={image} />
             <TitleReg>Реєстрація</TitleReg>
             <View>
                         <Input
@@ -109,7 +111,7 @@ const RegistrationScreen = () => {
                         {validationErrors.password && <Text style={{ color: 'red' }}>{validationErrors.password}</Text>}
 
                         <ShowPasswordReg onPress={handleShowPassword}>{passwordShow === false ? 'Показати' : 'Сховати'}</ShowPasswordReg>
-                <Button title='Зареєстуватися' onPress={handleSubmit}></Button>
+                <SubmitButton title='Зареєстуватися' onPress={handleSubmit}></SubmitButton>
                     </View>
                     <LinkWrapper>
                     <Paragraph>Вже є акаунт?{' '}</Paragraph>
@@ -120,7 +122,7 @@ const RegistrationScreen = () => {
                 </LoginWrapper>
                 </TouchableWithoutFeedback>
         </ScrollView>
-        </PostsScreen>
+        </BGImg>
     )
 }
 

@@ -1,11 +1,14 @@
 import { Dimensions } from 'react-native';
 import styled from 'styled-components/native'
+import LogoutBtn from '../../components/ButtonsComponents/LogoutBtn';
+
 
 export const KeyboardStyled = styled.KeyboardAvoidingView`
     flex: 1;
 `;
 
 export const LoginWrapper = styled.View`
+    
     background-color: #ffffff;
     border-radius: 25px 25px 0px 0px;
     margin-top: auto;
@@ -14,7 +17,7 @@ export const LoginWrapper = styled.View`
         : `${Math.min(Dimensions.get('window').height * 0.7, 446)}px`}; */
     padding: 32px 16px 111px 16px;
     position: relative;
-    overflow: visible;
+    overflow: visible
 `;
 
 export const Title = styled.Text`
@@ -85,3 +88,10 @@ export const PlusIconWrapper = styled.View`
     right: -12px;
 `;
 
+export const LogoutBtnRight = styled(LogoutBtn)`
+
+`;
+
+export const LogoutBtnWrapper = styled.View`
+    flex: 1;
+`;
