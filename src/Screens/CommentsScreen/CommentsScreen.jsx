@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useToast } from "react-native-toast-notifications";
 import { InputContainer, Input } from "./StyledCommentsScreen";
 import ArrowUpBtn from "../../components/ButtonsComponents/ArrowUpBtn";
-import Container from "./ContainerComponent/Container";
+import Container from "../../components/ContainerComponent/Container";
 
 const CommentsScreen = () => {
     const toast = useToast();
