@@ -1,17 +1,25 @@
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import * as ImagePicker from 'expo-image-picker';
-import { View, Pressable, StyleSheet, ImageBackground, Text } from "react-native";
+import { View, StyleSheet, ImageBackground, Text, TouchableOpacity } from "react-native";
 import { useToast } from "react-native-toast-notifications";
+import { Camera } from "expo-camera";
+import { MaterialIcons } from "@expo/vector-icons";
 import Container from "../../components/ContainerComponent/Container";
 import PostInput from '../../components/PostInputComponent/PostInput';
-import { MaterialIcons } from "@expo/vector-icons";
 import CreatePostBtn from "../../components/ButtonsComponents/CreatePostBtn";
 import DelereBtn from "../../components/ButtonsComponents/DeleteBtn";
+import PressableWrap from "../../components/PressableWrapComponent/PressableWrap";
+
+import * as ImagePicker from 'expo-image-picker';
+import * as MediaLibrary from "expo-media-library";
+import * as Location from "expo-location";
+
+
 const initialState = {
     image: null,
     title: '',
     place: '',
+    coords: {},
 };
 
 const CreatePostsScreen = () => {
@@ -19,7 +27,52 @@ const CreatePostsScreen = () => {
     const navigation = useNavigation();
     const [state, setState] = useState(initialState);
     const [isFocused, setIsFocused] = useState(null);
+    const [hasPermission, setHasPermission] = useState(null);
+    const [cameraRef, setCameraRef] = useState(null);
+    const [type, setType] = useState(Camera.Constants.Type.back);
 
+    useEffect(() => {
+        (async () => {
+            const { status } = await Camera.requestCameraPermissionsAsync();
+            await MediaLibrary.requestPermissionsAsync();
+            await Location.requestForegroundPermissionsAsync();
+
+            setHasPermission(status === 'granted');
+
+            let location = await Location.getCurrentPositionAsync({});
+
+            const coords = {
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
+            };
+
+            setState((prevState) => ({ ...prevState, coords }));
+        })();
+    }, []);
+
+    if (hasPermission === null) {
+        return <View />;
+    }
+    if (hasPermission === false) {
+        return <Text>No access to camera</Text>;
+    }
+
+    const takePhoto = async () => {
+        if (cameraRef) {
+            const { uri } = await cameraRef.takePictureAsync();
+            await MediaLibrary.createAssetAsync(uri);
+
+            setState((prevState) => ({ ...prevState, image: uri }));
+        }
+    };
+
+    const changeCamera = () => {
+        setType(
+            type === Camera.Constants.Type.back
+                ? Camera.Constants.Type.front
+                : Camera.Constants.Type.back
+        );
+    };
 
     const addImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -45,11 +98,10 @@ const CreatePostsScreen = () => {
         }
 
         navigation.navigate('Home', {
-            screen: 'Profile',
+            screen: 'Posts',
             params: { state },
         });
 
-        console.log('state:', state);
         setIsFocused(null);
         setState(initialState);
     };
@@ -60,7 +112,9 @@ const CreatePostsScreen = () => {
 
     return (
         <Container style={{ justifyContent: 'space-between'}}>
-            <Pressable onPress={() => addImage()}>
+            {/* <Pressable onPress={() => addImage()}> */}
+            <View>
+                <Camera style={styles.camera} type={type} ref={setCameraRef}>
                 <View style={styles.imgContainer}>
                     {state.image && (
                         <ImageBackground
@@ -70,20 +124,35 @@ const CreatePostsScreen = () => {
                         />  
                     )}
                 </View>
-                <View style={[
-                    styles.cameraIconWrap,
-                    { backgroundColor: state.image ? '#rgba(255, 255, 255, 0.30)' : '#FFFFFF'}
+                    <TouchableOpacity
+                        onPress={takePhoto}
+                        style={[
+                        styles.cameraIconWrap,
+                        { backgroundColor: state.image ? '#rgba(255, 255, 255, 0.30)' : '#FFFFFF'}
                 ]}>            
                     <MaterialIcons name='photo-camera' size={24}
                         color={state.image ? '#FFFFFF' : '#BDBDBD'}
                         style={styles.cameraIcon}
                     /> 
-                </View>
+                </TouchableOpacity>
+
+                </Camera>
 
                 <Text style={styles.loadText}>
                     {state.image ? 'Редагувати фото' : 'Завантажте фото'}
                 </Text>
-            </Pressable>
+                {state.image && (
+                    <PressableWrap
+                        iconName='flip-camera-ios'
+                        onPress={changeCamera}
+                        style={styles.changeCamera}
+                    />
+                )}
+
+                </View>
+
+                {/* </Pressable> */}
+                
 
             <PostInput
                 icon='create'
@@ -120,9 +189,34 @@ const styles = StyleSheet.create({
         gap:8,
     },
 
-    imgContainer: {
+    // imgContainer: {
+    // width: '100%',
+    // height: 240,
+    // borderRadius: 8,
+    // overflow: 'hidden',
+    // backgroundColor: '#F6F6F6',
+    // },
+
+    camera: {
+        aspectRatio: 343 / 240,
     width: '100%',
-    height: 240,
+    // height: 240,
+        borderRadius: 8,
+    borderWidth: 1,
+        overflow: 'hidden',
+    borderColor: '#BDBDBD',
+    // backgroundColor: '#F6F6F6',
+    },
+
+    imgContainer: {
+        position: "absolute",
+        bottom: 0,
+        right: 0,
+        backgroundColor: 'red',
+        borderWidth: 1,
+        borderColor: '#BDBDBD',
+    width: 100,
+    height: 70,
     borderRadius: 8,
     overflow: 'hidden',
     backgroundColor: '#F6F6F6',
@@ -143,10 +237,10 @@ const styles = StyleSheet.create({
         top: 18,
         left: 18,
     },
-    deleteIcon: {
+    changeCamera: {
         position: 'absolute',
-        bottom: 6,
-        right: 6,
+        bottom: -2,
+        right: 0,
     },
     loadText: {
         fontSize: 16,

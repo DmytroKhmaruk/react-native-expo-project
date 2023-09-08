@@ -7,6 +7,7 @@ import BottomActiveIcons from "../../components/BottomActiveIconsContainer/Botto
 import LogoutBtn from "../../components/ButtonsComponents/LogoutBtn";
 import GoBackBtn from "../../components/ButtonsComponents/GoBackBtn";
 import CommentsScreen from "../CommentsScreen/CommentsScreen";
+import MapScreen from "../MapScreen/MapScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -83,6 +84,16 @@ const Home = () => {
                 component={CommentsScreen}
                 options={{
                     title: 'Коментарі',
+                    tabBarItemStyle: {display: 'none'},
+                    tabBarStyle: { display: 'none' },
+                    headerLeft: () => <GoBackBtn />,
+                }}
+            />
+            <Tab.Screen
+                name='Map'
+                component={MapScreen}
+                options={{
+                    title: 'мапа',
                     tabBarItemStyle: {display: 'none'},
                     tabBarStyle: { display: 'none' },
                     headerLeft: () => <GoBackBtn />,
