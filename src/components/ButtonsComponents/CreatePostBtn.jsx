@@ -17,7 +17,7 @@ const CreatePostBtn = ({ text, onPress, style }) => {
                 },
                 styles.btnText, style]}
                 >
-                    {pressed ? 'Опубліковано' : text}
+                    {text}
                 </Text>
             )}
         </Pressable>
